@@ -68,7 +68,7 @@ No se permite que una persona se convierta en admin enviando un campo desde el n
        ss-streetwear
 3) Descomprime este proyecto.
 4) Sube TODO el contenido del proyecto al repositorio.
-   El archivo render.yaml debe quedar en la raíz del repositorio. No configures Root Directory: render.yaml ya está preparado para usar la raíz.
+   El archivo render.yaml debe quedar en la raíz del repositorio.
 5) En Render selecciona:
        New + -> Blueprint
 6) Elige el repositorio.

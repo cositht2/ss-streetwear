@@ -16,3 +16,10 @@
 
 .table-empty{text-align:center!important;padding:34px!important;color:#888}.status-pill{display:inline-flex;padding:6px 10px;border-radius:999px;border:1px solid #333;background:#171717;font-size:12px}.table-panel table td{vertical-align:middle}.table-panel table strong{font-weight:700}
 .order-status{background:#111;color:#fff;border:1px solid #333;padding:8px 10px;font:700 9px Inter;outline:none}.order-status:focus{border-color:#fff}
+
+/* ===== ADMIN MODAL SCROLL SAFETY ===== */
+html,body{min-height:100%;overflow-x:hidden;}
+.modal{overflow-y:auto;overflow-x:hidden;align-items:center;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.modal-box{max-height:calc(100vh - 32px);overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+#productForm{min-width:0;}
+@media(max-width:700px){.modal{padding:10px;align-items:flex-start}.modal-box{width:100%;max-height:calc(100vh - 20px)}.modal-head{position:sticky;top:0;background:#0c0c0c;z-index:3}.modal-actions{position:sticky;bottom:0;background:#0c0c0c;z-index:3;flex-wrap:wrap}.modal-actions>*{flex:1;min-width:130px}.form-grid{grid-template-columns:1fr}.form-grid label.full{grid-column:auto}}
