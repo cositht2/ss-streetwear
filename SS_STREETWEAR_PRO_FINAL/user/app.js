@@ -19,7 +19,7 @@
     const ME_API_URL = '/api/me';
     const LOGOUT_API_URL = '/api/logout';
 
-    function openLogin(){ const m=document.getElementById('loginModal'); if(m) m.classList.add('active'); }
+    function openLogin(){ const m=document.getElementById('loginModal'); if(!m)return; m.classList.add('active'); document.body.classList.add('lock'); requestAnimationFrame(()=>{m.scrollTop=0; const card=m.querySelector('.modal-card'); if(card) card.scrollTop=0;}); }
     async function refreshAccountUI(){
         try{
             const r=await fetch(ME_API_URL,{credentials:'include'}); const d=await r.json();
@@ -88,6 +88,7 @@
                 if(d.usuario.rol==='admin') window.location.href='/admin/';
                 else {
                     modal?.classList.remove('active');
+                    document.body.classList.remove('lock');
                     refreshAccountUI();
                     toast(`Bienvenido, ${d.usuario.nombre}`);
                 }
@@ -121,6 +122,7 @@
                 if(!login.ok) throw new Error(ld.error||'Cuenta creada; vuelve a iniciar sesión.');
                 registerForm.reset();
                 modal?.classList.remove('active');
+                document.body.classList.remove('lock');
                 refreshAccountUI();
                 toast(`Cuenta creada. Bienvenido, ${ld.usuario.nombre}`);
             }catch(err){error.textContent=err.message;error.hidden=false;}
