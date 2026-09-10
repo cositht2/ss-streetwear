@@ -19,25 +19,7 @@
     const ME_API_URL = '/api/me';
     const LOGOUT_API_URL = '/api/logout';
 
-    function openLogin(){
-        const m=document.getElementById('loginModal');
-        if(!m) return;
-        const loginPanel=document.getElementById('loginPanel');
-        const registerPanel=document.getElementById('registerPanel');
-        const switchLogin=document.getElementById('switchLogin');
-        const switchRegister=document.getElementById('switchRegister');
-        loginPanel?.removeAttribute('hidden');
-        registerPanel?.setAttribute('hidden','');
-        switchLogin?.classList.add('active');
-        switchRegister?.classList.remove('active');
-        m.classList.add('active');
-        document.body.classList.add('lock');
-        requestAnimationFrame(()=>{
-            const copy=m.querySelector('.modal-copy');
-            if(copy) copy.scrollTop=0;
-            document.getElementById('loginEmail')?.focus();
-        });
-    }
+    function openLogin(){ const m=document.getElementById('loginModal'); if(m) m.classList.add('active'); }
     async function refreshAccountUI(){
         try{
             const r=await fetch(ME_API_URL,{credentials:'include'}); const d=await r.json();

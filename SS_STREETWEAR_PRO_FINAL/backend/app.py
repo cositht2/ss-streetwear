@@ -21,7 +21,20 @@ app.config.update(
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATABASE = os.path.join(BASE_DIR, "database", "ss_streetwear.db")
+BUNDLED_DATABASE = os.path.join(BASE_DIR, "database", "ss_streetwear.db")
+# En Render, PERSISTENT_DATA_DIR apunta al disco persistente (/var/data).
+# En local, se sigue usando database/ss_streetwear.db.
+PERSISTENT_DATA_DIR = os.getenv("PERSISTENT_DATA_DIR", "").strip()
+if PERSISTENT_DATA_DIR:
+    os.makedirs(PERSISTENT_DATA_DIR, exist_ok=True)
+    DATABASE = os.path.join(PERSISTENT_DATA_DIR, "ss_streetwear.db")
+    # Copia inicial: migra la base incluida en el ZIP al disco persistente
+    # solo la primera vez. Nunca sobrescribe una base ya existente.
+    if not os.path.exists(DATABASE) and os.path.exists(BUNDLED_DATABASE):
+        import shutil
+        shutil.copy2(BUNDLED_DATABASE, DATABASE)
+else:
+    DATABASE = BUNDLED_DATABASE
 os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
