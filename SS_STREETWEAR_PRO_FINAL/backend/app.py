@@ -4,28 +4,39 @@ import sqlite3
 import os
 import re
 from datetime import datetime, timedelta
+from collections import defaultdict, deque
 from functools import wraps
 
 app = Flask(__name__)
 
 # ============================================================
-# CONFIGURACIÓN
+# CONFIGURACIÓN / PRODUCCIÓN
 # ============================================================
 IS_PRODUCTION = bool(os.getenv("RENDER") or os.getenv("FLASK_ENV") == "production")
+secret_key = os.getenv("SECRET_KEY")
+if IS_PRODUCTION and not secret_key:
+    raise RuntimeError("SECRET_KEY es obligatorio en producción.")
+
 app.config.update(
-    SECRET_KEY=os.getenv("SECRET_KEY") or "dev-only-change-this-secret",
+    SECRET_KEY=secret_key or "dev-only-change-this-secret",
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=IS_PRODUCTION,
     PERMANENT_SESSION_LIFETIME=timedelta(days=7),
+    MAX_CONTENT_LENGTH=32 * 1024 * 1024,
 )
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATABASE = os.path.join(BASE_DIR, "database", "ss_streetwear.db")
-os.makedirs(os.path.dirname(DATABASE), exist_ok=True)
+# En local se usa la base incluida en el proyecto. En un hosting con disco
+# persistente puedes definir SQLITE_DB_PATH=/var/data/ss_streetwear.db.
+DATABASE = os.getenv("SQLITE_DB_PATH") or os.path.join(BASE_DIR, "database", "ss_streetwear.db")
+os.makedirs(os.path.dirname(os.path.abspath(DATABASE)), exist_ok=True)
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 ALLOWED_ORDER_STATES = {"Pendiente", "Confirmado", "Enviado", "Entregado", "Cancelado"}
+RATE_WINDOW = 60
+_login_attempts = defaultdict(deque)
+_register_attempts = defaultdict(deque)
 
 
 def ahora():
@@ -178,11 +189,12 @@ def init_db():
 
     # Administrador inicial. En producción se toma de variables de entorno.
     admin_email = os.getenv("ADMIN_EMAIL", "admin@ssstreetwear.com").strip().lower()
-    admin_password = os.getenv("ADMIN_PASSWORD", "Admin123!")
+    env_admin_password = os.getenv("ADMIN_PASSWORD")
+    admin_password = env_admin_password or "Admin123!"
     admin_name = os.getenv("ADMIN_NAME", "Administrador S&S").strip() or "Administrador S&S"
 
     if EMAIL_RE.match(admin_email) and len(admin_password) >= 8:
-        admin = conn.execute("SELECT id FROM usuarios WHERE lower(correo)=?", (admin_email,)).fetchone()
+        admin = conn.execute("SELECT * FROM usuarios WHERE lower(correo)=?", (admin_email,)).fetchone()
         if not admin:
             conn.execute(
                 """INSERT INTO usuarios(nombre,correo,password_hash,rol,activo,fecha_registro)
@@ -190,12 +202,19 @@ def init_db():
                 (admin_name, admin_email, generate_password_hash(admin_password), "admin", ahora())
             )
         else:
-            # Mantener el rol de administrador, pero no reescribir la contraseña
-            # en cada arranque: evita invalidar sesiones/cambios manuales.
-            conn.execute(
-                "UPDATE usuarios SET rol='admin', activo=1, nombre=? WHERE lower(correo)=?",
-                (admin_name, admin_email)
-            )
+            # ADMIN_PASSWORD definido por el hosting se convierte en la fuente
+            # de verdad del administrador. Así un ZIP que ya trae SQLite no queda
+            # atrapado con una contraseña antigua al desplegarlo.
+            if env_admin_password:
+                conn.execute(
+                    "UPDATE usuarios SET nombre=?, rol='admin', activo=1, password_hash=? WHERE lower(correo)=?",
+                    (admin_name, generate_password_hash(env_admin_password), admin_email)
+                )
+            else:
+                conn.execute(
+                    "UPDATE usuarios SET rol='admin', activo=1, nombre=? WHERE lower(correo)=?",
+                    (admin_name, admin_email)
+                )
 
     conn.commit()
     conn.close()
@@ -218,6 +237,34 @@ def json_error(message, status=400):
     return jsonify({"error": message}), status
 
 
+def _client_ip():
+    # No confiamos en X-Forwarded-For por defecto: el límite funciona igual
+    # detrás de un proxy y evita que el cliente pueda falsear su identidad.
+    return request.remote_addr or "unknown"
+
+
+def _rate_limited(bucket, limit):
+    now = datetime.now().timestamp()
+    q = bucket[_client_ip()]
+    while q and now - q[0] > RATE_WINDOW:
+        q.popleft()
+    if len(q) >= limit:
+        return True
+    q.append(now)
+    return False
+
+
+@app.after_request
+def security_headers(response):
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+    if IS_PRODUCTION:
+        response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+    return response
+
+
 # ============================================================
 # PÁGINAS
 # ============================================================
@@ -228,31 +275,50 @@ def pagina_inicio():
 
 @app.route("/user/")
 def pagina_user():
-    return send_from_directory(os.path.join(BASE_DIR, "user"), "index.html")
+    return send_from_directory(os.path.join(BASE_DIR, "user"), "index.html", max_age=300)
 
 
 @app.route("/admin/")
 def pagina_admin():
     if not admin_required():
         return redirect("/user/?login=admin")
-    return send_from_directory(os.path.join(BASE_DIR, "admin"), "index.html")
+    return send_from_directory(os.path.join(BASE_DIR, "admin"), "index.html", max_age=300)
 
 
 @app.route("/user/<path:filename>")
 def user_files(filename):
-    return send_from_directory(os.path.join(BASE_DIR, "user"), filename)
+    return send_from_directory(os.path.join(BASE_DIR, "user"), filename, max_age=86400)
 
 
 @app.route("/admin/<path:filename>")
 def admin_files(filename):
     if filename == "index.html" and not admin_required():
         return redirect("/user/?login=admin")
-    return send_from_directory(os.path.join(BASE_DIR, "admin"), filename)
+    return send_from_directory(os.path.join(BASE_DIR, "admin"), filename, max_age=86400)
 
 
 @app.route("/shared/<path:filename>")
 def shared_files(filename):
-    return send_from_directory(os.path.join(BASE_DIR, "shared"), filename)
+    return send_from_directory(os.path.join(BASE_DIR, "shared"), filename, max_age=86400)
+
+
+@app.route("/robots.txt")
+def robots():
+    return (
+        "User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api/\n",
+        200,
+        {"Content-Type": "text/plain; charset=utf-8"},
+    )
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    base = request.url_root.rstrip("/")
+    body = f"""<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">
+  <url><loc>{base}/user/</loc></url>
+</urlset>"""
+    return body, 200, {"Content-Type": "application/xml; charset=utf-8"}
 
 
 # ============================================================
@@ -305,6 +371,8 @@ def logout():
 # ============================================================
 @app.route("/api/usuarios", methods=["POST"])
 def registrar_usuario():
+    if _rate_limited(_register_attempts, 8):
+        return json_error("Demasiados intentos. Espera un minuto y vuelve a intentarlo.", 429)
     datos = request.get_json(silent=True) or {}
     nombre = " ".join(str(datos.get("nombre") or "").strip().split())
     correo = str(datos.get("correo") or "").strip().lower()
@@ -316,6 +384,8 @@ def registrar_usuario():
         return json_error("Escribe un correo válido.", 400)
     if len(password) < 8:
         return json_error("La contraseña debe tener al menos 8 caracteres.", 400)
+    if len(password) > 128:
+        return json_error("La contraseña no puede superar 128 caracteres.", 400)
 
     conn = get_db()
     try:
@@ -343,6 +413,8 @@ def registrar_usuario():
 
 @app.route("/api/login", methods=["POST"])
 def login():
+    if _rate_limited(_login_attempts, 10):
+        return json_error("Demasiados intentos de inicio de sesión. Espera un minuto.", 429)
     datos = request.get_json(silent=True) or {}
     correo = str(datos.get("correo") or "").strip().lower()
     password = str(datos.get("password") or "")
@@ -843,6 +915,11 @@ def listar_suscriptores():
 # ============================================================
 # ERRORES
 # ============================================================
+@app.errorhandler(413)
+def request_too_large(_):
+    return json_error("La solicitud es demasiado grande.", 413)
+
+
 @app.errorhandler(404)
 def not_found(_):
     return jsonify({"error": "Recurso no encontrado."}), 404

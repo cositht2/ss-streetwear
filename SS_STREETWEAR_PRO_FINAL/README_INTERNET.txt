@@ -171,3 +171,26 @@ requirements.txt
 - Los pedidos descuentan stock de forma transaccional.
 - Contacto y newsletter guardan información.
 - Configuración se guarda en SQLite.
+
+
+============================================================
+10. PUBLICACIÓN / BASE DE DATOS
+============================================================
+La aplicación admite SQLite de forma nativa. Para conservar datos en un hosting, la
+base debe estar en un almacenamiento persistente del proveedor. Puedes definir:
+    SQLITE_DB_PATH=/var/data/ss_streetwear.db
+cuando el servicio tenga un disco persistente montado en esa ruta.
+
+El ZIP no puede hacer que la base de tu PC se vuelva automáticamente la misma base
+de datos de tu dominio: son entornos distintos. En producción, lo importante es que
+la instancia web y el almacenamiento de la base compartan un volumen persistente.
+
+También se reforzó el arranque del administrador: si el hosting define ADMIN_PASSWORD,
+esa contraseña reemplaza la anterior del administrador al iniciar, por lo que el
+SQLite incluido en el ZIP no te deja bloqueado con una clave vieja.
+
+============================================================
+11. LIMPIEZA DEL ZIP
+============================================================
+La versión entregada para publicar no debe incluir .git, __pycache__, ni archivos
+temporales generados por Python. Esos elementos fueron retirados del paquete final.
