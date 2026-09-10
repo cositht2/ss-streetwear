@@ -2,22 +2,13 @@ services:
   - type: web
     name: ss-streetwear
     runtime: python
-    # SQLite persistente en Render requiere un servicio de pago + disco persistente.
-    plan: 0.5c-512mb
-    rootDir: .
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn backend.app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
     healthCheckPath: /health
-    numInstances: 1
-    disk:
-      name: ss-streetwear-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: SECRET_KEY
         generateValue: true
-      - key: PERSISTENT_DATA_DIR
-        value: /var/data
       - key: ADMIN_EMAIL
         value: admin@ssstreetwear.com
       - key: ADMIN_PASSWORD
