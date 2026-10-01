@@ -1,0 +1,11 @@
+{
+  "name": "S&S STREETWEAR",
+  "short_name": "S&S",
+  "description": "Tienda urbana premium S&S STREETWEAR",
+  "start_url": "/user/",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#ff2638",
+  "lang": "es-BO",
+  "icons": [{"src":"../shared/favicon.svg","sizes":"any","type":"image/svg+xml"}]
+}

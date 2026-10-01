@@ -1,0 +1,165 @@
+/* ==========================================================
+   vida.css — arregla el scroll de las ventanas y añade animaciones
+   Se carga DESPUÉS de styles.css, por eso sus reglas ganan.
+   ========================================================== */
+
+/* --- ARREGLO DE SCROLL: ventanas (login, registro, producto) --- */
+.modal {
+  align-items: flex-start !important;      /* la ventana empieza arriba: ya no se corta el inicio */
+  overflow-y: auto !important;             /* si no cabe en pantalla, se puede bajar */
+  -webkit-overflow-scrolling: touch;       /* scroll suave en iPhone */
+}
+.modal-card {
+  margin: auto !important;                 /* centrada cuando sobra espacio */
+  max-height: none !important;             /* quita el límite de altura que la cortaba */
+  overflow: visible !important;            /* el formulario completo se ve y se puede bajar */
+}
+.modal-box {
+  max-height: none !important;             /* mismo arreglo para el panel admin */
+  margin: auto;                            /* centrada en el panel admin */
+}
+.modal:has(.modal-box) { display: block !important; } /* admin: permite bajar la página completa */
+.modal-copy { padding-bottom: 40px; }      /* espacio final para que el botón nunca quede pegado al borde */
+html { scroll-behavior: smooth; }          /* los enlaces #catalogo, #contacto se deslizan suavemente */
+
+/* --- BARRA DE PROGRESO DE LECTURA (arriba de la página) --- */
+#vidaProgreso {
+  position: fixed; top: 0; left: 0;        /* pegada arriba a la izquierda */
+  height: 3px; width: 0;                   /* empieza vacía; el JS la llena */
+  background: linear-gradient(90deg, #ff2638, #ff8a4c); /* rojo de la marca a naranja */
+  z-index: 2000;                           /* por encima de todo */
+  box-shadow: 0 0 12px #ff2638;            /* brillo rojo */
+}
+
+/* --- APARICIÓN AL BAJAR (las secciones suben y se muestran) --- */
+.vida-oculto { opacity: 0; transform: translateY(38px); }  /* estado inicial: invisible y abajo */
+.vida-visible { opacity: 1; transform: none; transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+
+/* --- TARJETAS DE PRODUCTO: inclinación 3D y brillo al pasar el mouse --- */
+.vida-tilt { transition: transform .25s ease, box-shadow .25s ease; will-change: transform; }
+.vida-tilt:hover { box-shadow: 0 25px 60px rgba(255,38,56,.18); }
+
+/* --- EFECTO ONDA AL HACER CLIC EN BOTONES --- */
+.btn, button.primary, .add-cart { position: relative; overflow: hidden; }
+.vida-onda {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: rgba(255,255,255,.35); transform: scale(0);
+  animation: vidaOnda .6s ease-out forwards;
+}
+@keyframes vidaOnda { to { transform: scale(4); opacity: 0; } }
+
+/* --- LATIDO SUAVE en el contador del carrito y favoritos --- */
+#cartCount, #favCount { animation: vidaLatido 2.4s ease-in-out infinite; }
+@keyframes vidaLatido { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+
+/* --- TÍTULO PRINCIPAL con brillo que se desplaza --- */
+.hero h1 span {
+  background: linear-gradient(90deg, #ff2638, #fff, #ff2638); background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: vidaBrillo 4s linear infinite;
+}
+@keyframes vidaBrillo { to { background-position: 200% center; } }
+
+/* --- RESPETO A QUIEN PIDE MENOS MOVIMIENTO (accesibilidad) --- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .vida-oculto { opacity: 1; transform: none; }
+}
+
+/* ==========================================================
+   CAPA PREMIUM (scroll, imágenes y vida)
+   ========================================================== */
+
+/* --- BARRA DE SCROLL (para bajar y subir) con los colores de la marca --- */
+html { scrollbar-width: thin; scrollbar-color: #ff2638 #0a0a0a; scroll-padding-top: 110px; } /* Firefox; y los enlaces #seccion no quedan tapados por el menú */
+::-webkit-scrollbar { width: 11px; height: 11px; }                    /* Chrome, Edge y Safari */
+::-webkit-scrollbar-track { background: #0a0a0a; }                   /* riel oscuro */
+::-webkit-scrollbar-thumb { background: linear-gradient(#ff2638, #c81024); border-radius: 8px; border: 2px solid #0a0a0a; } /* barrita roja */
+::-webkit-scrollbar-thumb:hover { background: #ff5a68; }
+
+/* --- BOTÓN PARA VOLVER ARRIBA --- */
+#vidaSubir {
+  position: fixed; right: 22px; bottom: 22px; width: 48px; height: 48px; z-index: 1500;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.18); color: #fff; font-size: 20px;
+  background: rgba(10,10,12,.78); backdrop-filter: blur(10px);
+  opacity: 0; transform: translateY(14px); pointer-events: none;      /* oculto hasta bajar un poco */
+  transition: opacity .35s, transform .35s, background .25s;
+}
+#vidaSubir.on { opacity: 1; transform: none; pointer-events: auto; }
+#vidaSubir:hover { background: #ff2638; }
+#vidaSubir:focus-visible, .btn:focus-visible, a:focus-visible, button:focus-visible { outline: 2px solid #ff2638; outline-offset: 3px; } /* foco visible con teclado */
+
+/* --- MENÚ: se compacta al bajar y marca la sección actual --- */
+.header { transition: background .3s, box-shadow .3s; }
+.header.vida-compacto { background: rgba(5,5,5,.94); box-shadow: 0 10px 40px rgba(0,0,0,.55); }
+.desktop-nav a { position: relative; }
+.desktop-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: #ff2638; transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+.desktop-nav a.vida-activo::after, .desktop-nav a:hover::after { transform: scaleX(1); }
+
+/* --- IMÁGENES CON MÁS VIDA --- */
+.hero-slides { animation: vidaZoom 24s ease-in-out infinite alternate; will-change: transform; } /* zoom lento cinematográfico */
+@keyframes vidaZoom { from { scale: 1; } to { scale: 1.09; } }
+.category-card, .mosaic-item, .store-gallery-grid figure, .editorial-photo { overflow: hidden; }  /* la imagen agrandada no se sale del marco */
+.category-card img, .mosaic-item img, .store-gallery-grid img, .editorial-photo img {
+  transition: transform 1.2s cubic-bezier(.2,.7,.2,1), filter .6s; filter: saturate(.9) contrast(1.04);
+}
+.category-card:hover img, .mosaic-item:hover img, .store-gallery-grid figure:hover img, .editorial-photo:hover img,
+.product-card:hover .product-media img { transform: scale(1.08); filter: saturate(1.18) contrast(1.08); }
+img[loading="lazy"] { opacity: 0; transition: opacity .8s ease; }   /* las fotos aparecen suavemente al cargar */
+img[loading="lazy"].vida-cargada { opacity: 1; }
+
+/* --- ventanas: entrada más elegante --- */
+.modal.active .modal-card { animation: vidaEntra .45s cubic-bezier(.2,.7,.2,1); }
+@keyframes vidaEntra { from { opacity: 0; transform: translateY(30px) scale(.98); } }
+@media (max-width: 760px) { #vidaSubir { right: 14px; bottom: 84px; } .modal-card { grid-template-columns: 1fr !important; } .modal-image { min-height: 260px !important; } .modal-copy { padding: 34px 22px !important; } }
+
+/* ==========================================================
+   NUEVO: carrusel del hero, preloader, WhatsApp, oferta, cookies, tema
+   ========================================================== */
+:root { --hero-velo: linear-gradient(90deg, rgba(0,0,0,.95), rgba(0,0,0,.48) 45%, rgba(0,0,0,.78)); }          /* velo del modo oscuro */
+html:not([data-tema="oscuro"]) { --hero-velo: linear-gradient(90deg, rgba(246,244,239,.97), rgba(246,244,239,.72) 45%, rgba(246,244,239,.18)); } /* velo del modo claro */
+.hero-image { background-image: var(--hero-velo) !important; z-index: 1; }   /* el velo va SOBRE las fotos del carrusel */
+.hero-slides { position: absolute; inset: -20% 0 0 0; z-index: 0; }          /* contenedor de las fotos */
+.hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s ease; }
+.hero-slide.on { opacity: 1; }
+.vh-ctrl { position: absolute; z-index: 4; left: 50%; bottom: 56px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 999px; background: rgba(22,19,15,.6); backdrop-filter: blur(8px); }
+.vh-ctrl button { border: 0; background: transparent; color: #fff; cursor: pointer; }
+.vh-nav { width: 28px; height: 28px; font-size: 18px; border-radius: 50%; }
+.vh-nav:hover { background: rgba(255,255,255,.2); }
+.vh-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.45) !important; padding: 0; transition: width .3s, background .3s; }
+.vh-dot.on { width: 26px; border-radius: 6px; background: #ff2638 !important; }
+#vidaPre { position: fixed; inset: 0; z-index: 99999; display: grid; place-items: center; background: #f6f4ef; transition: opacity .5s, visibility .5s; }
+html[data-tema="oscuro"] #vidaPre { background: #050505; }
+#vidaPre strong { font: 900 64px/1 Montserrat, Inter, sans-serif; color: #16130f; animation: vidaLatido 1s ease-in-out infinite; }
+html[data-tema="oscuro"] #vidaPre strong { color: #fff; }
+#vidaPre span { color: #ff2638; }
+#vidaPre.fuera { opacity: 0; visibility: hidden; }
+#vidaWa { position: fixed; left: 22px; bottom: 22px; z-index: 1500; width: 56px; height: 56px; border-radius: 50%; display: none; place-items: center; background: #25d366; color: #fff; box-shadow: 0 8px 24px rgba(37,211,102,.45); animation: vidaPulso 2.2s infinite; }
+#vidaWa.on { display: grid; }
+@keyframes vidaPulso { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,.55); } 70%,100% { box-shadow: 0 0 0 20px rgba(37,211,102,0); } }
+.cuenta { display: flex; gap: 10px; margin-top: 22px; }
+.cuenta div { min-width: 68px; padding: 10px 8px; text-align: center; border-radius: 12px; background: #16130f; color: #fff; }
+.cuenta b { display: block; font: 900 28px/1 Montserrat, Inter, sans-serif; }
+.cuenta small { font-size: 10px; letter-spacing: .1em; color: #d8d3c9; }
+#vidaCookies { position: fixed; z-index: 1600; left: 50%; bottom: 16px; transform: translateX(-50%); width: min(620px, 94vw); display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 14px 18px; border-radius: 16px; background: #16130f; color: #f6f4ef; font-size: 13px; box-shadow: 0 20px 60px rgba(0,0,0,.4); }
+#vidaCookies p { flex: 1 1 260px; margin: 0; } #vidaCookies a { color: #ff6a7a; text-decoration: underline; }
+#vidaCookies button { border: 0; border-radius: 999px; padding: 9px 20px; font-weight: 800; background: #ff2638; color: #fff; cursor: pointer; }
+#temaBtn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.info-page { width: min(820px, 92vw); margin: 0 auto; padding: 60px 0 90px; line-height: 1.75; }
+.info-page h1 { font: 900 clamp(34px, 6vw, 56px)/1 Montserrat, Inter, sans-serif; margin-bottom: 30px; }
+.info-page h2 { font: 800 26px/1.1 Montserrat, Inter, sans-serif; margin: 46px 0 12px; }
+.info-page table { width: 100%; border-collapse: collapse; margin: 14px 0; } .info-page th, .info-page td { padding: 10px 12px; text-align: left; border-bottom: 1px solid rgba(128,128,128,.35); }
+.info-wrap { overflow-x: auto; }
+@media (max-width: 760px) { #vidaWa { left: 14px; bottom: 84px; } .vh-ctrl { bottom: 24px; } }
+
+/* ==========================================================
+   LETRAS BLANCAS SOBRE FOTOS (categorías, mosaico y galería)
+   Las tarjetas son <button>, y un botón usa texto negro por defecto.
+   ========================================================== */
+.category-card, .category-card h3, .category-card small, .category-card span,
+.category-card::before, .mosaic-item, .mosaic-item h3, .mosaic-item small, .mosaic-item p,
+.store-gallery-grid figcaption { color: #fff !important; }                 /* siempre blancas, en modo claro y oscuro */
+.category-card h3, .mosaic-item h3 { text-shadow: 0 2px 16px rgba(0,0,0,.7); }   /* sombra suave: se lee aunque la foto sea clara */
+.category-card small, .mosaic-item small { font-size: 11px; letter-spacing: .18em; opacity: .95; }
+.category-card span, .mosaic-item p { font-size: 13px; opacity: .95; }
+.category-card::after, .mosaic-item::after { background: linear-gradient(transparent 25%, rgba(0,0,0,.82)) !important; } /* fondo oscuro detrás del texto */
