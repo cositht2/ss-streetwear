@@ -1,0 +1,27 @@
+# Blueprint de Render para S&S STREETWEAR.
+# Este archivo debe estar en la RAÍZ del repositorio (junto a requirements.txt y backend/).
+services:
+  - type: web
+    name: ss-streetwear
+    runtime: python
+    plan: free
+    # No pongas rootDir: el proyecto vive en la raíz del repositorio.
+    # La versión de Python sale de .python-version (3.12).
+    buildCommand: pip install -r requirements.txt
+    # 1 worker: el límite de intentos vive en memoria y SQLite admite un solo escritor.
+    startCommand: gunicorn backend.app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin123
+      # Obligatoria (mínimo 10 caracteres). Render te la pedirá al crear el servicio.
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        value: Administrador S&S
+    # Variables OPCIONALES que añades tú después en Render → Environment:
+    #   DATABASE_URL  = cadena de conexión PostgreSQL (Neon) → datos permanentes y gratis.
+    #   SITE_URL      = https://tu-dominio.com (sin barra final) cuando conectes tu .com.
+    # Alternativa de pago: disco persistente en /var/data + SQLITE_DB_PATH=/var/data/ss_streetwear.db
