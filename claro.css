@@ -1,0 +1,90 @@
+/* claro.css — tema claro de la tienda. Se carga al final: sus reglas ganan a styles.css. */
+html:not([data-tema="oscuro"]){--bg:#f6f4ef;--ink:#f6f4ef;--panel:#fff;--surface:#fff;--surface2:#efece5;--text:#16130f;--white:#16130f;--muted:#5c574f;--line:rgba(22,19,15,.13);--red:#d9182b}
+html:not([data-tema="oscuro"]) body{background:#f6f4ef;color:#16130f}
+html:not([data-tema="oscuro"]) body .ambient-b{display:none}
+html:not([data-tema="oscuro"]) body .ambient-a{opacity:.05}
+html:not([data-tema="oscuro"]) body .noise{opacity:.02}
+html:not([data-tema="oscuro"]) body ::selection{background:#d9182b;color:#fff}
+html:not([data-tema="oscuro"]) body .header,html:not([data-tema="oscuro"]) body .header.scrolled,html:not([data-tema="oscuro"]) body .header.vida-compacto{background:rgba(246,244,239,.92);border-bottom:1px solid rgba(22,19,15,.12);box-shadow:none}
+html:not([data-tema="oscuro"]) body .header.vida-compacto{box-shadow:0 10px 30px rgba(22,19,15,.1)}
+html:not([data-tema="oscuro"]) body .brand,html:not([data-tema="oscuro"]) body .brand strong{color:#16130f}
+html:not([data-tema="oscuro"]) body .brand small{color:#5c574f}
+html:not([data-tema="oscuro"]) body .desktop-nav a{color:#4a453d}
+html:not([data-tema="oscuro"]) body .desktop-nav a:hover,html:not([data-tema="oscuro"]) body .desktop-nav a.vida-activo{color:#16130f}
+html:not([data-tema="oscuro"]) body .icon-btn{background:#fff;color:#16130f;border:1px solid rgba(22,19,15,.14)}
+html:not([data-tema="oscuro"]) body .icon-btn:hover{background:#efece5}
+html:not([data-tema="oscuro"]) body .icon-btn em{color:#fff;background:#d9182b}
+html:not([data-tema="oscuro"]) body .mobile-nav,html:not([data-tema="oscuro"]) body .search-panel{background:#fff}
+html:not([data-tema="oscuro"]) body .mobile-nav a{color:#16130f;border-top:1px solid rgba(22,19,15,.1)}
+html:not([data-tema="oscuro"]) body .search-wrap{border-bottom:1px solid #16130f}
+html:not([data-tema="oscuro"]) body .search-wrap input{color:#16130f;background:transparent}
+html:not([data-tema="oscuro"]) body .search-wrap button,html:not([data-tema="oscuro"]) body .search-panel p{color:#5c574f}
+html:not([data-tema="oscuro"]) body .hero{background:#ece8e0}
+html:not([data-tema="oscuro"]) body .hero-image{filter:saturate(1)}
+html:not([data-tema="oscuro"]) body .hero-overlay{background:linear-gradient(180deg,transparent 70%,#f6f4ef)}
+html:not([data-tema="oscuro"]) body .hero-grid{opacity:.08;background-image:linear-gradient(rgba(22,19,15,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(22,19,15,.25) 1px,transparent 1px)}
+html:not([data-tema="oscuro"]) body .hero-orb{opacity:.1}
+html:not([data-tema="oscuro"]) body .hero h1{color:#16130f}
+html:not([data-tema="oscuro"]) body .hero h1 span{background:linear-gradient(90deg,#d9182b,#ff6a3d,#d9182b);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+html:not([data-tema="oscuro"]) body .hero-copy>p,html:not([data-tema="oscuro"]) body .eyebrow+p{color:#3d3932}
+html:not([data-tema="oscuro"]) body .hero-meta,html:not([data-tema="oscuro"]) body .hero-meta span{color:#4a453d}
+html:not([data-tema="oscuro"]) body .hero-card{background:rgba(255,255,255,.82);border:1px solid rgba(22,19,15,.14);box-shadow:0 20px 50px rgba(22,19,15,.15);width:auto;min-width:230px;color:#16130f}
+html:not([data-tema="oscuro"]) body .hero-card strong{font-size:38px;line-height:.9;color:#16130f}
+html:not([data-tema="oscuro"]) body .hero-card small,html:not([data-tema="oscuro"]) body .hero-card span{color:#5c574f}
+html:not([data-tema="oscuro"]) body .hero-card i{background:#d9182b}
+html:not([data-tema="oscuro"]) body .btn{color:#16130f;border:1px solid rgba(22,19,15,.3)}
+html:not([data-tema="oscuro"]) body .btn-primary{color:#fff;background:#d9182b;border-color:#d9182b}
+html:not([data-tema="oscuro"]) body .btn-primary:hover,html:not([data-tema="oscuro"]) body .btn-ghost:hover{background:#16130f;color:#fff;border-color:#16130f}
+html:not([data-tema="oscuro"]) body .btn-ghost{background:transparent}
+html:not([data-tema="oscuro"]) body .btn-black{background:#16130f;color:#fff;border-color:#16130f}
+html:not([data-tema="oscuro"]) body .btn-black:hover{background:#fff;color:#16130f}
+html:not([data-tema="oscuro"]) body .trust,html:not([data-tema="oscuro"]) body .intro,html:not([data-tema="oscuro"]) body .categories,html:not([data-tema="oscuro"]) body .catalog,html:not([data-tema="oscuro"]) body .drops,html:not([data-tema="oscuro"]) body .features,html:not([data-tema="oscuro"]) body .testimonials,html:not([data-tema="oscuro"]) body .visual-gallery,html:not([data-tema="oscuro"]) body .contact,html:not([data-tema="oscuro"]) body .newsletter{background:#f6f4ef;border-color:rgba(22,19,15,.12)}
+html:not([data-tema="oscuro"]) body .trust,html:not([data-tema="oscuro"]) body .newsletter,html:not([data-tema="oscuro"]) body .features,html:not([data-tema="oscuro"]) body .contact{background:#efece5}
+html:not([data-tema="oscuro"]) body .trust p,html:not([data-tema="oscuro"]) body .trust-grid p,html:not([data-tema="oscuro"]) body .intro-copy p,html:not([data-tema="oscuro"]) body .section-heading>p,html:not([data-tema="oscuro"]) body .section-heading.split>p,html:not([data-tema="oscuro"]) body .intro-stat span,html:not([data-tema="oscuro"]) body .catalog-info,html:not([data-tema="oscuro"]) body .product-category,html:not([data-tema="oscuro"]) body .product-description,html:not([data-tema="oscuro"]) body .product-stock,html:not([data-tema="oscuro"]) body .editorial-copy p,html:not([data-tema="oscuro"]) body .editorial-copy .eyebrow,html:not([data-tema="oscuro"]) body .feature-grid p,html:not([data-tema="oscuro"]) body .testimonial-grid blockquote,html:not([data-tema="oscuro"]) body .testimonial-grid footer span,html:not([data-tema="oscuro"]) body .contact>.container>div:first-child>p,html:not([data-tema="oscuro"]) body .contact-links small,html:not([data-tema="oscuro"]) body .contact-links span,html:not([data-tema="oscuro"]) body .faq-list p,html:not([data-tema="oscuro"]) body .faq-layout>div:first-child>p,html:not([data-tema="oscuro"]) body .whatsapp-inner p,html:not([data-tema="oscuro"]) body .newsletter small,html:not([data-tema="oscuro"]) body #newsletterForm small,html:not([data-tema="oscuro"]) body .manifesto p,html:not([data-tema="oscuro"]) body .signature,html:not([data-tema="oscuro"]) body .modal-copy>p,html:not([data-tema="oscuro"]) body .modal-copy>small,html:not([data-tema="oscuro"]) body .modal-selects label,html:not([data-tema="oscuro"]) body .checkout-form small,html:not([data-tema="oscuro"]) body .total-row span,html:not([data-tema="oscuro"]) body .cart-empty,html:not([data-tema="oscuro"]) body .remove,html:not([data-tema="oscuro"]) body .clear-cart,html:not([data-tema="oscuro"]) body .footer-brand p,html:not([data-tema="oscuro"]) body .footer-brand>p,html:not([data-tema="oscuro"]) body .footer-column h4,html:not([data-tema="oscuro"]) body .footer-bottom{color:#4a453d}
+html:not([data-tema="oscuro"]) body .trust-grid>div,html:not([data-tema="oscuro"]) body .catalog-tools,html:not([data-tema="oscuro"]) body .stats-grid,html:not([data-tema="oscuro"]) body .stats-grid>div,html:not([data-tema="oscuro"]) body .feature-grid article,html:not([data-tema="oscuro"]) body .testimonial-grid article,html:not([data-tema="oscuro"]) body .footer,html:not([data-tema="oscuro"]) body .footer-bottom,html:not([data-tema="oscuro"]) body .panel-head,html:not([data-tema="oscuro"]) body .panel-foot,html:not([data-tema="oscuro"]) body .cart-item,html:not([data-tema="oscuro"]) body .fav-row,html:not([data-tema="oscuro"]) body .account-tabs,html:not([data-tema="oscuro"]) body .modal-gallery,html:not([data-tema="oscuro"]) body .trust-grid>div:nth-child(n+3){border-color:rgba(22,19,15,.13)}
+html:not([data-tema="oscuro"]) body .section-number{color:rgba(22,19,15,.09)}
+html:not([data-tema="oscuro"]) body .intro-stat strong,html:not([data-tema="oscuro"]) body .catalog-info b{color:#16130f}
+html:not([data-tema="oscuro"]) body .manifesto{background:radial-gradient(circle at 70% 50%,rgba(217,24,43,.1),transparent 40%),#ebe7de;border-color:rgba(22,19,15,.1)}
+html:not([data-tema="oscuro"]) body .manifesto-bg{color:rgba(22,19,15,.05)}
+html:not([data-tema="oscuro"]) body .manifesto h2{color:#16130f}
+html:not([data-tema="oscuro"]) body .whatsapp-section{background:#e4f3e8}
+html:not([data-tema="oscuro"]) body .whatsapp-section h2{color:#16130f}
+html:not([data-tema="oscuro"]) body .footer{background:#16130f;color:#f6f4ef}
+html:not([data-tema="oscuro"]) body .footer .brand,html:not([data-tema="oscuro"]) body .footer .brand strong,html:not([data-tema="oscuro"]) body .footer-big{color:#f6f4ef}
+html:not([data-tema="oscuro"]) body .footer-big{opacity:.06}
+html:not([data-tema="oscuro"]) body .footer p,html:not([data-tema="oscuro"]) body .footer-column h4,html:not([data-tema="oscuro"]) body .footer-column a,html:not([data-tema="oscuro"]) body .footer-bottom{color:#c9c4ba}
+html:not([data-tema="oscuro"]) body .footer-column a:hover{color:#fff}
+html:not([data-tema="oscuro"]) body .product-card,html:not([data-tema="oscuro"]) body .category-card,html:not([data-tema="oscuro"]) body .mosaic-item,html:not([data-tema="oscuro"]) body .editorial-photo{background:#fff}
+html:not([data-tema="oscuro"]) body .product-card{border:1px solid rgba(22,19,15,.12)}
+html:not([data-tema="oscuro"]) body .product-card:hover{border-color:#16130f}
+html:not([data-tema="oscuro"]) body .product-media{background:#ece8e0}
+html:not([data-tema="oscuro"]) body .product-body h3,html:not([data-tema="oscuro"]) body .product-price{color:#16130f}
+html:not([data-tema="oscuro"]) body .filter{color:#16130f;border-color:rgba(22,19,15,.25);background:transparent}
+html:not([data-tema="oscuro"]) body .filter:hover,html:not([data-tema="oscuro"]) body .filter.active{background:#16130f;color:#fff;border-color:#16130f}
+html:not([data-tema="oscuro"]) body .catalog-tools select,html:not([data-tema="oscuro"]) body .checkout-form input,html:not([data-tema="oscuro"]) body .modal-selects select,html:not([data-tema="oscuro"]) body .contact-form input,html:not([data-tema="oscuro"]) body .contact-form textarea,html:not([data-tema="oscuro"]) body #newsletterForm input,html:not([data-tema="oscuro"]) body .newsletter input{background:#fff;color:#16130f;border:1px solid rgba(22,19,15,.25)}
+html:not([data-tema="oscuro"]) body #newsletterForm button,html:not([data-tema="oscuro"]) body .newsletter button{background:#16130f;color:#fff}
+html:not([data-tema="oscuro"]) body .add-btn{color:#16130f;border-color:rgba(22,19,15,.3)}
+html:not([data-tema="oscuro"]) body .add-btn:hover{background:#16130f;color:#fff}
+html:not([data-tema="oscuro"]) body .empty-results{border-color:rgba(22,19,15,.3);color:#4a453d}
+html:not([data-tema="oscuro"]) body .empty-results strong,html:not([data-tema="oscuro"]) body .cart-empty strong{color:#16130f}
+html:not([data-tema="oscuro"]) body .contact-links a,html:not([data-tema="oscuro"]) body .contact-form,html:not([data-tema="oscuro"]) body .feature-grid article,html:not([data-tema="oscuro"]) body .testimonial-grid article{background:#fff;border:1px solid rgba(22,19,15,.12)}
+html:not([data-tema="oscuro"]) body .contact-form label{color:#3d3932}
+html:not([data-tema="oscuro"]) body .contact-links a strong,html:not([data-tema="oscuro"]) body .contact h2,html:not([data-tema="oscuro"]) body .contact h3{color:#16130f}
+html:not([data-tema="oscuro"]) body .category-card,html:not([data-tema="oscuro"]) body .category-card h3,html:not([data-tema="oscuro"]) body .category-card small,html:not([data-tema="oscuro"]) body .category-card span,html:not([data-tema="oscuro"]) body .mosaic-item,html:not([data-tema="oscuro"]) body .mosaic-item h3,html:not([data-tema="oscuro"]) body .mosaic-item small,html:not([data-tema="oscuro"]) body .mosaic-item p,html:not([data-tema="oscuro"]) body .store-gallery-grid figure,html:not([data-tema="oscuro"]) body .store-gallery-grid figcaption{color:#fff}
+html:not([data-tema="oscuro"]) body .category-card small,html:not([data-tema="oscuro"]) body .category-card span,html:not([data-tema="oscuro"]) body .mosaic-item small,html:not([data-tema="oscuro"]) body .mosaic-item p{color:#e8e4dc}
+html:not([data-tema="oscuro"]) body .product-badge.dark,html:not([data-tema="oscuro"]) body .favorite,html:not([data-tema="oscuro"]) body .quick,html:not([data-tema="oscuro"]) body .image-count{background:rgba(22,19,15,.85);color:#fff}
+html:not([data-tema="oscuro"]) body .overlay,html:not([data-tema="oscuro"]) body .modal{background:rgba(22,19,15,.55)}
+html:not([data-tema="oscuro"]) body .side-panel,html:not([data-tema="oscuro"]) body .modal-card{background:#fff;color:#16130f;border-color:rgba(22,19,15,.15);box-shadow:0 30px 90px rgba(22,19,15,.3)}
+html:not([data-tema="oscuro"]) body .panel-foot{background:#f6f4ef}
+html:not([data-tema="oscuro"]) body .modal-image,html:not([data-tema="oscuro"]) body .modal-thumb,html:not([data-tema="oscuro"]) body .modal-gallery{background:#ece8e0}
+html:not([data-tema="oscuro"]) body .close-btn,html:not([data-tema="oscuro"]) body .modal-close,html:not([data-tema="oscuro"]) body .fav-row button,html:not([data-tema="oscuro"]) body .qty button,html:not([data-tema="oscuro"]) body .checkout-actions .clear-cart{background:#f6f4ef;color:#16130f;border:1px solid rgba(22,19,15,.25)}
+html:not([data-tema="oscuro"]) body .modal-close:hover,html:not([data-tema="oscuro"]) body .close-btn:hover{background:#d9182b;color:#fff}
+html:not([data-tema="oscuro"]) body .account-tab{color:#5c574f}
+html:not([data-tema="oscuro"]) body .account-tab.active,html:not([data-tema="oscuro"]) body .account-tab:hover{color:#16130f}
+html:not([data-tema="oscuro"]) body .login-error{color:#b3121f}
+html:not([data-tema="oscuro"]) body .account-logged,html:not([data-tema="oscuro"]) body .cd-row{color:#3d3932}
+html:not([data-tema="oscuro"]) body .buy-wa{color:#fff;background:#d9182b}
+html:not([data-tema="oscuro"]) body .toast{background:#16130f;color:#fff}
+html:not([data-tema="oscuro"]) body .modal-copy h2,html:not([data-tema="oscuro"]) body .panel-head h2{color:#16130f}
+html:not([data-tema="oscuro"]) body #vidaSubir{background:rgba(255,255,255,.9);color:#16130f;border-color:rgba(22,19,15,.2)}
+body.lock{touch-action:auto}
